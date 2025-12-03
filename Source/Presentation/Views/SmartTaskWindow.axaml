@@ -1,0 +1,135 @@
+﻿<Window x:Class="AgentCommandEnvironment.Presentation.Views.SmartTaskWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:AgentCommandEnvironment.Core.Models"
+        x:DataType="models:SmartTask"
+        Title="Task Details"
+        Width="760"
+        Height="560"
+        MinWidth="640"
+        MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        FontFamily="Segoe UI"
+        Foreground="{DynamicResource ThemeForegroundBrush}">
+  <Border Padding="0"
+          Background="{DynamicResource ThemeBackgroundBrush}">
+    <ScrollViewer>
+      <StackPanel Spacing="18" Margin="20">
+        <Border Padding="18"
+                Background="{DynamicResource ThemeControlLowBrush}"
+                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="10">
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalAlignment="Center">
+            <StackPanel>
+              <TextBlock Text="Task"
+                         FontSize="12"
+                         FontWeight="SemiBold"
+                         Opacity="0.8" />
+              <TextBlock Text="{Binding Intent, FallbackValue=(untitled task)}"
+                         FontSize="24"
+                         FontWeight="Bold"
+                         TextWrapping="Wrap" />
+              <TextBlock Text="{Binding BoundAssignmentTask.Label, FallbackValue=No assignment label}" Margin="0,6,0,0"
+                         FontSize="13"
+                         Opacity="0.85" />
+            </StackPanel>
+            <Border Padding="12,6"
+                    Background="{DynamicResource ThemeControlMidBrush}"
+                    CornerRadius="16"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+              <StackPanel>
+                <TextBlock Text="State"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Opacity="0.7" />
+                <TextBlock Text="{Binding StateDisplay}" FontSize="16" FontWeight="SemiBold" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </Border>
+
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+          <Border Grid.Row="0" Grid.Column="0" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeControlLowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+            <StackPanel>
+              <TextBlock Text="Strategy" FontSize="12" FontWeight="SemiBold" Opacity="0.75" />
+              <TextBlock Text="{Binding StrategyDisplay}" FontSize="18" FontWeight="SemiBold" />
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Row="0" Grid.Column="1" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeControlLowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+            <StackPanel>
+              <TextBlock Text="Execution State" FontSize="12" FontWeight="SemiBold" Opacity="0.75" />
+              <TextBlock Text="{Binding BoundAssignmentTask.Status, FallbackValue=Pending}" FontSize="18" FontWeight="SemiBold" />
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Row="1" Grid.Column="0" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeControlLowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+            <StackPanel>
+              <TextBlock Text="Depth" FontSize="12" FontWeight="SemiBold" Opacity="0.75" />
+              <TextBlock Text="{Binding Depth}" FontSize="18" FontWeight="SemiBold" />
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Row="1" Grid.Column="1" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeControlLowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+            <StackPanel>
+              <TextBlock Text="Work Share" FontSize="12" FontWeight="SemiBold" Opacity="0.75" />
+              <TextBlock>
+                <Run Text="{Binding WorkRetentionPercentDisplay}" />
+                <Run Text=" retained" />
+              </TextBlock>
+              <TextBlock>
+                <Run Text="{Binding DelegationPercentDisplay}" />
+                <Run Text=" delegated" />
+              </TextBlock>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Padding="12" CornerRadius="8" Background="{DynamicResource ThemeControlLowBrush}" BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+            <StackPanel>
+              <TextBlock Text="Description" FontSize="12" FontWeight="SemiBold" Opacity="0.75" />
+              <TextBox Text="{Binding BoundAssignmentTask.TaskContext, FallbackValue=No description captured yet.}"
+                       Margin="0,6,0,0"
+                       Height="100"
+                       AcceptsReturn="True"
+                       TextWrapping="Wrap"
+                       IsReadOnly="True"
+                       BorderThickness="1"
+                       Background="{DynamicResource ThemeControlMidBrush}"
+                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <Border Padding="16"
+                Background="{DynamicResource ThemeControlLowBrush}"
+                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="10"
+                DataContext="{Binding BoundAssignmentTask}"
+                x:DataType="models:SmartTaskExecutionContext">
+          <StackPanel Spacing="12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="8">
+              <TextBlock Text="Log" FontSize="16" FontWeight="SemiBold" />
+              <TextBlock Text="Command output and notes" FontSize="12" Opacity="0.7" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBox Text="{Binding TaskLogText, FallbackValue=No log entries yet.}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     FontFamily="Consolas"
+                     FontSize="12"
+                     MinHeight="200"
+                     Background="{DynamicResource ThemeControlMidBrush}"
+                     BorderThickness="1"
+                     IsReadOnly="True"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Border>
+</Window>
+

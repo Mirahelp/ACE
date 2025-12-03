@@ -1,0 +1,327 @@
+﻿msgid ""
+msgstr ""
+"Project-Id-Version: Mirahelp ACE UI\n"
+"Language: en_US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "button.add.file"
+msgstr "Add file"
+
+msgid "button.agree"
+msgstr "Agree"
+
+msgid "button.browse"
+msgstr "Browse"
+
+msgid "button.cancel"
+msgstr "Cancel"
+
+msgid "button.pause"
+msgstr "Pause"
+
+msgid "button.pause.assignment"
+msgstr "Pause assignment"
+
+msgid "button.remove"
+msgstr "Remove"
+
+msgid "button.start"
+msgstr "Start"
+
+msgid "button.switch.theme"
+msgstr "Switch theme"
+
+msgid "button.theme.dark"
+msgstr "Dark theme"
+
+msgid "button.theme.light"
+msgstr "Light theme"
+
+msgid "header.command"
+msgstr "Command"
+
+msgid "header.decision"
+msgstr "Decision"
+
+msgid "header.description"
+msgstr "Description"
+
+msgid "header.detail"
+msgstr "Detail"
+
+msgid "header.evidence"
+msgstr "Evidence"
+
+msgid "header.file"
+msgstr "File"
+
+msgid "header.reason"
+msgstr "Reason"
+
+msgid "header.recorded"
+msgstr "Recorded"
+
+msgid "header.requirement"
+msgstr "Requirement"
+
+msgid "header.risk"
+msgstr "Risk"
+
+msgid "header.source"
+msgstr "Source"
+
+msgid "header.summary"
+msgstr "Summary"
+
+msgid "header.time"
+msgstr "Time"
+
+msgid "label.api.key"
+msgstr "API key"
+
+msgid "label.base.retention"
+msgstr "Base retention"
+
+msgid "label.files.tracked"
+msgstr "Files tracked"
+
+msgid "label.model"
+msgstr "Model"
+
+msgid "label.optional"
+msgstr "Optional"
+
+msgid "label.prompt"
+msgstr "Prompt"
+
+msgid "label.required"
+msgstr "Required"
+
+msgid "label.retention.increment"
+msgstr "Retention increment"
+
+msgid "label.title"
+msgstr "Title"
+
+msgid "label.tokens.consumed"
+msgstr "Tokens consumed"
+
+msgid "label.total.requests"
+msgstr "Total requests"
+
+msgid "option.allow.install"
+msgstr "Allow software installation"
+
+msgid "option.allow.internet"
+msgstr "Allow internet access"
+
+msgid "option.allow.system.config"
+msgstr "Allow system configuration changes"
+
+msgid "option.include.workspace"
+msgstr "Include workspace context"
+
+msgid "prompt.select.model"
+msgstr "Select a model."
+
+msgid "prompt.workspace.select"
+msgstr "Select a workspace folder to store assignment repositories."
+
+msgid "quickstart.choose.model"
+msgstr "Choose a model"
+
+msgid "quickstart.choose.model.detail"
+msgstr "Pick the OpenAI model Mirahelp ACE should use for this assignment."
+
+msgid "quickstart.connect.detail"
+msgstr "Paste your API key and verify the connection."
+
+msgid "quickstart.connect.openai"
+msgstr "Connect to OpenAI"
+
+msgid "quickstart.describe.assignment"
+msgstr "Describe the assignment"
+
+msgid "quickstart.describe.assignment.detail"
+msgstr "Provide the full request so Mirahelp ACE can plan and execute the work."
+
+msgid "quickstart.pick.workspace"
+msgstr "Pick a workspace"
+
+msgid "quickstart.pick.workspace.detail"
+msgstr "Select a folder where Mirahelp ACE can clone repositories and store artifacts."
+
+msgid "quickstart.api.configured"
+msgstr "API key configured."
+
+msgid "quickstart.api.missing"
+msgstr "Configure your OpenAI API key."
+
+msgid "quickstart.model.selected"
+msgstr "Selected model: {0}"
+
+msgid "quickstart.model.missing"
+msgstr "Select a model after connecting."
+
+msgid "quickstart.workspace.ready"
+msgstr "{0}"
+
+msgid "quickstart.workspace.missing"
+msgstr "Select a workspace folder."
+
+msgid "quickstart.prompt.ready"
+msgstr "Prompt ready ({0} characters)."
+
+msgid "quickstart.prompt.missing"
+msgstr "Describe the assignment to plan work."
+
+msgid "section.command.retry"
+msgstr "Command retry attempts"
+
+msgid "section.openai.connection"
+msgstr "OpenAI connection"
+
+msgid "section.permission.toggles"
+msgstr "Permission toggles"
+
+msgid "section.policy.interceptor"
+msgstr "Policy interceptor decisions"
+
+msgid "section.policy.risk"
+msgstr "Policy risk tolerance"
+
+msgid "section.quickstart.title"
+msgstr "Quick start checklist"
+
+msgid "section.recursion.exit.bias"
+msgstr "Recursion exit bias"
+
+msgid "section.semantic.blackboard"
+msgstr "Semantic blackboard"
+
+msgid "section.success.heuristics"
+msgstr "Success heuristics"
+
+msgid "section.usage.telemetry"
+msgstr "Usage telemetry"
+
+msgid "section.workspace"
+msgstr "Workspace"
+
+msgid "status.assignment.idle"
+msgstr "Assignment idle"
+
+msgid "status.awaiting.evaluation"
+msgstr "Awaiting evaluation"
+
+msgid "status.openai.none"
+msgstr "No models loaded."
+
+msgid "status.openai.missing"
+msgstr "OpenAI API key not configured."
+
+msgid "status.openai.loading"
+msgstr "Loading OpenAI models."
+
+msgid "status.openai.using.model"
+msgstr "Using model: {0}"
+
+msgid "status.planner.communicating"
+msgstr "Planner is communicating…"
+
+msgid "status.planner.preparing"
+msgstr "Planner is preparing…"
+
+msgid "status.workspace.ready"
+msgstr "Workspace ready: {0}"
+
+msgid "tab.assignment.details"
+msgstr "Assignment details"
+
+msgid "tab.execution.settings"
+msgstr "Execution settings"
+
+msgid "tab.result"
+msgstr "Result"
+
+msgid "tab.supervisor"
+msgstr "Supervisor"
+
+msgid "task.default.label"
+msgstr "Task {0}"
+
+msgid "task.fallback.answer.label"
+msgstr "Answer assignment"
+
+msgid "task.fallback.answer.context"
+msgstr "Single-step direct answer task with no executable commands."
+
+msgid "text.background.command.running"
+msgstr "Command(s) are running in the background."
+
+msgid "text.execution.guard"
+msgstr "Review these guardrails before starting automation."
+
+msgid "text.heuristic.instructions"
+msgstr "Document each success heuristic and capture the supporting evidence."
+
+msgid "text.heuristics.pending"
+msgstr "Success heuristics will be evaluated when the assignment finishes."
+
+msgid "text.manual.inspection"
+msgstr "Manual inspection required."
+
+msgid "dialog.usage.warning.message"
+msgstr ""
+"This application communicates with OpenAI services. These services are not free. Depending on the model OpenAI will charge you based on your usage. While using this tool always monitor your usage carefully. Consider this application may perform many requests based on various execution settings and prompts. It is recommended to always use a cheap model as listed under OpenAI pricing.\n"
+"\n"
+"This application may execute commands and adjust the system configuration. It may result in loss of work, changed files, or any other negative outcome.\n"
+"\n"
+"By continuing you agree that you are solely responsible for any and every resulting outcome related to the usage of this application."
+
+msgid "text.policy.auto.approve.default"
+msgstr "Auto-approve up to: --"
+
+msgid "text.policy.auto.approve.value"
+msgstr "Auto-approve up to: {0}"
+
+msgid "text.retries.placeholder"
+msgstr "Retries: --"
+
+msgid "text.retries.value"
+msgstr "Retries: {0}"
+
+msgid "text.retries.zero"
+msgstr "Retries: 0 (fail fast)"
+
+msgid "text.retry.explanation"
+msgstr "Mirahelp ACE retries failed commands before invoking the repair agent."
+
+msgid "text.tokens.detail.placeholder"
+msgstr "Prompt {0} · Completion {1}"
+
+msgid "text.usage.updated.placeholder"
+msgstr "Updated {0}"
+
+msgid "title.application"
+msgstr "Mirahelp ACE"
+
+msgid "tooltip.allow.install"
+msgstr "Allow Mirahelp ACE to install new software."
+
+msgid "tooltip.allow.internet"
+msgstr "Allow Mirahelp ACE to use internet."
+
+msgid "tooltip.allow.system.config"
+msgstr "Allow Mirahelp ACE to update configuration."
+
+msgid "tooltip.reload.api.key"
+msgstr "Reload the API key from secure storage."
+
+msgid "value.auto"
+msgstr "Auto"
+
+msgid "value.manual"
+msgstr "Manual"

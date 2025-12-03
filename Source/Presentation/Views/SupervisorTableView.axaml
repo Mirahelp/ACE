@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="400"
+             x:Class="AgentCommandEnvironment.Presentation.Views.SupervisorTableView">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Disabled">
+        <Grid RowDefinitions="Auto,*"
+              Margin="0">
+            <Grid x:Name="HeaderGrid"
+                  Grid.Row="0"
+                  Margin="8,8,8,0"
+                  VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="28" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="320" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="160" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           x:Name="IndicatorHeaderTextBlock"
+                           Text=""
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1"
+                           x:Name="StateGlyphHeaderTextBlock"
+                           Text="State"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2"
+                           x:Name="IntentHeaderTextBlock"
+                           Text="Intent"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="3"
+                           x:Name="StrategyHeaderTextBlock"
+                           Text="Strategy"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="4"
+                           x:Name="StatusHeaderTextBlock"
+                           Text="Status"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <TextBlock Grid.Column="5"
+                           x:Name="StageHeaderTextBlock"
+                           Text="Stage"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center" />
+            </Grid>
+
+            <ScrollViewer Grid.Row="1"
+                          Margin="8,6,8,8"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="RowsPanel"
+                            Spacing="0" />
+            </ScrollViewer>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

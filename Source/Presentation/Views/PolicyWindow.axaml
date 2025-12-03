@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AgentCommandEnvironment.Presentation.Views.PolicyWindow"
+        Title="Confirmation"
+        Width="520"
+        Height="560"
+        SizeToContent="Manual"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        FontFamily="Segoe UI"
+        Background="{DynamicResource ThemeBackgroundBrush}"
+        Foreground="{DynamicResource ThemeForegroundBrush}">
+        <Border BorderBrush="{DynamicResource ThemeBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="24"
+                Background="{DynamicResource ThemeControlLowBrush}">
+            <Grid RowDefinitions="*,Auto" RowSpacing="16">
+                <ScrollViewer Grid.Row="0"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="16">
+                        <TextBlock x:Name="DescriptionTextBlock"
+                                   TextWrapping="Wrap"
+                                   FontSize="14" />
+
+                        <Border x:Name="CommandContainer"
+                                Background="{DynamicResource ThemeControlMidBrush}"
+                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="12"
+                                IsVisible="False">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto"
+                                          MaxHeight="280">
+                                <TextBlock x:Name="CommandTextBlock"
+                                           FontFamily="Consolas, 'Cascadia Code', 'JetBrains Mono', 'Courier New'"
+                                           TextWrapping="Wrap"
+                                           FontSize="13" />
+                            </ScrollViewer>
+                        </Border>
+
+                        <TextBlock x:Name="QuestionTextBlock"
+                                   Text="Do you want to allow this command?"
+                                   FontWeight="SemiBold"
+                                   IsVisible="False" />
+                    </StackPanel>
+                </ScrollViewer>
+
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Spacing="12">
+                    <Button x:Name="SecondaryButton"
+                            MinWidth="90"
+                            IsVisible="False" />
+                    <Button x:Name="PrimaryButton"
+                            MinWidth="90"
+                            IsDefault="True" />
+                </StackPanel>
+            </Grid>
+        </Border>
+</Window>

@@ -1,0 +1,13 @@
+﻿global using AssignmentTaskStatusOptions = AgentCommandEnvironment.Core.Enums.AssignmentTaskStatusOptions;
+global using PlannerInvocationOptions = AgentCommandEnvironment.Core.Enums.PlannerInvocationOptions;
+global using PolicyRiskLevelOptions = AgentCommandEnvironment.Core.Enums.PolicyRiskLevelOptionsOptions;
+global using PolicyRiskToleranceOptions = AgentCommandEnvironment.Core.Enums.PolicyRiskToleranceOptionsOptions;
+global using SemanticFactOptions = AgentCommandEnvironment.Core.Enums.SemanticFactOptions;
+global using SmartTaskStateOptions = AgentCommandEnvironment.Core.Enums.SmartTaskStateOptions;
+global using SmartTaskStrategyOptions = AgentCommandEnvironment.Core.Enums.SmartTaskStrategyOptions;
+global using SmartTaskTypeOptions = AgentCommandEnvironment.Core.Enums.SmartTaskTypeOptions;
+global using SuccessHeuristicEvaluationStatusOptions = AgentCommandEnvironment.Core.Enums.SuccessHeuristicEvaluationStatusOptionsOptions;
+global using UsageChannelOptions = AgentCommandEnvironment.Core.Enums.UsageChannelOptionsOptions;
+global using WorkspaceFileChangeOptions = AgentCommandEnvironment.Core.Enums.WorkspaceFileChangeOptions;
+
+

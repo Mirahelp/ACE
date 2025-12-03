@@ -1,0 +1,1001 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Class="AgentCommandEnvironment.Presentation.Views.MainWindow"
+    xmlns:models="clr-namespace:AgentCommandEnvironment.Core.Models"
+    xmlns:converters="clr-namespace:AgentCommandEnvironment.Presentation.Converters"
+    xmlns:views="clr-namespace:AgentCommandEnvironment.Presentation.Views"
+    xmlns:strings="clr-namespace:AgentCommandEnvironment.Core.Constants"
+    xmlns:loc="clr-namespace:AgentCommandEnvironment.Presentation.Localization"
+    mc:Ignorable="d"
+    Title="{loc:GetText Key={x:Static strings:UiCatalogKeys.TitleApplication}}"
+    FontFamily="Segoe UI"
+    Foreground="{DynamicResource ThemeForegroundBrush}">
+    <Window.Resources>
+        <converters:BooleanToTextConverter x:Key="BoolToSourceTextConverter"
+                                            TrueText="{loc:GetText Key={x:Static strings:UiCatalogKeys.ValueAuto}}"
+                                            FalseText="{loc:GetText Key={x:Static strings:UiCatalogKeys.ValueManual}}" />
+        <converters:BooleanToTextConverter x:Key="BoolToRequirementTextConverter"
+                                            TrueText="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelRequired}}"
+                                            FalseText="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelOptional}}" />
+        <converters:BooleanToBrushConverter x:Key="HeuristicImportanceBackgroundConverter"
+                     TrueBrush="#FFE8F5E9"
+                     FalseBrush="#FFEFF4FF" />
+        <converters:BooleanToBrushConverter x:Key="HeuristicImportanceBorderConverter"
+                     TrueBrush="#FF00B294"
+                     FalseBrush="#FFB0C5E6" />
+        <ControlTemplate x:Key="SpinnerTemplate">
+            <Border Width="32" Height="32" CornerRadius="16" BorderBrush="#40000000" BorderThickness="2" Padding="4">
+                <ProgressBar IsIndeterminate="True" Minimum="0" Maximum="1" Width="24" Height="4" />
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>
+    <Window.Styles>
+    </Window.Styles>
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+            Margin="8,8,8,4"
+            Padding="16,12"
+            Background="{DynamicResource ThemeControlMidBrush}"
+            BorderBrush="{DynamicResource ThemeBorderBrush}"
+            BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                <Image x:Name="AppLogoImage"
+                       x:FieldModifier="private"
+                       Height="72"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Left"
+                       Margin="0,0,16,0" />
+                <Button x:Name="ThemeToggleButton"
+                        x:FieldModifier="private"
+                        Grid.Column="2"
+                        MinWidth="120"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        Padding="16,8"
+                    Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonSwitchTheme}}" />
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" MinWidth="300" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="494" MinWidth="320" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0"
+                      Margin="0,0,12,0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <Border BorderBrush="{DynamicResource ThemeBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12"
+                        Margin="0,0,0,12"
+                        Background="{DynamicResource ThemeControlLowBrush}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionOpenAiConnection}}"
+                                   FontWeight="SemiBold"
+                                   FontSize="14" />
+                        <TextBlock x:Name="OpenAiStatusTextBlock"
+                                   x:FieldModifier="private"
+                                   Margin="0,4,0,8"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelApiKey}}" />
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                                  <TextBox x:Name="OpenAiApiKeyPasswordBox"
+                                      x:FieldModifier="private"
+                                      Grid.Column="0"
+                                      PasswordChar="&#x25CF;"
+                                     HorizontalAlignment="Stretch"
+                                     Margin="0,0,8,0" />
+                                <Button x:Name="LoadApiKeyButton"
+                                    x:FieldModifier="private"
+                                    Grid.Column="1"
+                                    Content="&#x27F3;"
+                                    Width="40"
+                                    Height="28"
+                                    ToolTip.Tip="{loc:GetText Key={x:Static strings:UiCatalogKeys.TooltipReloadApiKey}}"
+                                    Click="OnLoadApiKeyClick" />
+                        </Grid>
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelModel}}"
+                                   Margin="0,12,0,0" />
+                        <ComboBox x:Name="ModelComboBox"
+                                  x:FieldModifier="private"
+                                  Margin="0,4,0,0"
+                                  HorizontalAlignment="Stretch"
+                                  SelectionChanged="OnModelSelectionChanged" />
+                    </StackPanel>
+                </Border>
+
+                <Border BorderBrush="{DynamicResource ThemeBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionWorkspace}}"
+                                   FontWeight="SemiBold"
+                                   FontSize="14" />
+                        <TextBlock x:Name="WorkspaceStatusTextBox"
+                                   x:FieldModifier="private"
+                                   Margin="0,4,0,8"
+                                   TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="WorkspacePathTextBox"
+                                     x:FieldModifier="private"
+                                     Margin="0,0,8,0"
+                                     IsReadOnly="True"
+                                     HorizontalAlignment="Stretch"
+                                     Width="220" />
+                                <Button x:Name="SelectWorkspaceButton"
+                                    x:FieldModifier="private"
+                                    Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonBrowse}}"
+                                    Width="90"
+                                    Click="OnSelectWorkspaceClick" />
+                        </StackPanel>
+                        <CheckBox x:Name="IncludeWorkspaceContextCheckBox"
+                                  x:FieldModifier="private"
+                                  Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.OptionIncludeWorkspace}}"
+                                  Margin="0,8,0,0"
+                                  IsChecked="True" />
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                            <Button Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonAddFile}}"
+                                    Width="90"
+                                    Click="OnAddWorkspaceFileClick" />
+                            <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelFilesTracked}}"
+                                       Margin="8,4,0,0" />
+                        </StackPanel>
+                        <ListBox x:Name="WorkspaceFilesListView"
+                                 x:FieldModifier="private"
+                                 Margin="0,4,0,0"
+                                 MinHeight="160"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Grid.IsSharedSizeScope="True"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    
+                                </Style>
+                                <Style Selector="ListBox#WorkspaceFilesListView TextBlock">
+                                    
+                                </Style>
+                                <Style Selector="ListBox#WorkspaceFilesListView Button">
+                                    
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:WorkspaceFileItem">
+                                    <Grid Margin="0,0,0,4"
+                                          ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" SharedSizeGroup="WorkspaceFilePathColumn" />
+                                            <ColumnDefinition Width="3*" SharedSizeGroup="WorkspaceFileFullPathColumn" />
+                                            <ColumnDefinition Width="1.2*" SharedSizeGroup="WorkspaceFileSourceColumn" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Path}"
+                                                   FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding FullPath}"
+                                                   FontSize="11"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding IsFromWorkspaceAuto, Converter={StaticResource BoolToSourceTextConverter}}"
+                                                   FontSize="11"
+                                                   HorizontalAlignment="Left" />
+                                        <Button Grid.Column="3"
+                                            Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonRemove}}"
+                                                Width="70"
+                                                HorizontalAlignment="Right"
+                                                Click="OnRemoveWorkspaceFileClick" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Column="1"
+                      Margin="8,0,8,0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Border BorderBrush="{DynamicResource ThemeBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12"
+                    Margin="0,0,0,8"
+                    Background="{DynamicResource ThemeControlLowBrush}">
+                <StackPanel Spacing="12">
+                    <TextBlock x:Name="AssignmentStatusTextBlock"
+                               x:FieldModifier="private"
+                               IsVisible="False" />
+                    <TabControl x:Name="AssignmentTabControl"
+                        x:FieldModifier="private"
+                        Margin="0,0,0,8"
+                        SelectedIndex="2"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch">
+                               <TabItem x:Name="SupervisorTabItem"
+                                  x:FieldModifier="private"
+                                      Header="{loc:GetText Key={x:Static strings:UiCatalogKeys.TabSupervisor}}"
+                                      IsEnabled="False">
+                                    <Border BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="0"
+                                            Margin="0"
+                                            Background="{DynamicResource ThemeControlLowBrush}">
+                                        <views:SupervisorTableView x:Name="SupervisorTableViewControl"
+                                                                   x:FieldModifier="private" />
+                                    </Border>
+                                </TabItem>
+                               <TabItem x:Name="ResultTabItem"
+                                   x:FieldModifier="private"
+                                   Header="{loc:GetText Key={x:Static strings:UiCatalogKeys.TabResult}}"
+                                      IsEnabled="False"
+                                      Opacity="0.6">
+                                  <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                             HorizontalScrollBarVisibility="Auto">
+                                    <StackPanel Margin="12" Spacing="12">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Margin="0,8,0,16"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock x:Name="ResultStatusGlyphTextBlock"
+                                                       x:FieldModifier="private"
+                                                       Text="&#x25CB;"
+                                                       FontSize="28"
+                                                       Margin="0,0,12,0"
+                                                       VerticalAlignment="Center" />
+                                            <StackPanel>
+                                                <TextBlock x:Name="ResultStatusHeadlineTextBlock"
+                                                           x:FieldModifier="private"
+                                                           Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.StatusAwaitingEvaluation}}"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold" />
+                                                <TextBlock x:Name="ResultStatusDetailTextBlock"
+                                                           x:FieldModifier="private"
+                                                           Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextHeuristicsPending}}"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,4,0,0" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionSuccessHeuristics}}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="14" />
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextHeuristicInstructions}}"
+                                                   Margin="0,4,0,8"
+                                                   TextWrapping="Wrap" />
+                                        <ScrollViewer Margin="0,0,0,0"
+                                                      MinHeight="160"
+                                                      MaxHeight="320"
+                                                      VerticalScrollBarVisibility="Auto"
+                                                      HorizontalScrollBarVisibility="Auto">
+                                            <ListBox x:Name="ResultHeuristicsListView"
+                                                     x:FieldModifier="private"
+                                                     BorderThickness="0">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:SuccessHeuristicItem">
+                                                        <Border Padding="8"
+                                                            Margin="0,0,0,4"
+                                                                CornerRadius="4"
+                                                                BorderBrush="#11000000"
+                                                                BorderThickness="1">
+                                                            <StackPanel Spacing="6">
+                                                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                                                        <TextBlock Text="{Binding EvaluationGlyph}"
+                                                                                   FontSize="14" />
+                                                                        <TextBlock Text="{Binding EvaluationStatusDisplay}"
+                                                                                   FontWeight="SemiBold" />
+                                                                    </StackPanel>
+                                                                        <Border Padding="6,2"
+                                                                            CornerRadius="4"
+                                                                            BorderBrush="#FFB0C5E6"
+                                                                            BorderThickness="1"
+                                                                            Background="{DynamicResource ThemeControlLowBrush}">
+                                                                        <TextBlock Text="{Binding Mandatory, Converter={StaticResource BoolToRequirementTextConverter}}"
+                                                                                   FontWeight="SemiBold" />
+                                                                    </Border>
+                                                                </StackPanel>
+                                                                <TextBlock Text="{Binding Description}"
+                                                                           TextWrapping="Wrap" />
+                                                                <TextBlock Text="{Binding Evidence, TargetNullValue={loc:GetText Key={x:Static strings:UiCatalogKeys.TextManualInspection}}}"
+                                                                           TextWrapping="Wrap" />
+                                                                <TextBlock Text="{Binding EvaluationNotes}"
+                                                                           TextWrapping="Wrap" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+                            <TabItem Header="{loc:GetText Key={x:Static strings:UiCatalogKeys.TabAssignmentDetails}}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Margin="12" Spacing="12">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelTitle}}" />
+                                        <TextBox x:Name="AssignmentTitleTextBox"
+                                                 x:FieldModifier="private"
+                                                 Height="28"
+                                                 Margin="0,4,0,0" />
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelPrompt}}"
+                                                   Margin="0,12,0,0" />
+                                        <TextBox x:Name="AssignmentPromptTextBox"
+                                                 x:FieldModifier="private"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 MinHeight="150"
+                                                 Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+
+                            <TabItem Header="{loc:GetText Key={x:Static strings:UiCatalogKeys.TabExecutionSettings}}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Margin="12" Spacing="12">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextExecutionGuard}}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionPermissionToggles}}"
+                                                   Margin="0,16,0,4"
+                                                   FontWeight="SemiBold" />
+                                        <CheckBox x:Name="AllowNewSoftwareInstallationsCheckBox"
+                                                  x:FieldModifier="private"
+                                                  Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.OptionAllowInstall}}"
+                                                  IsChecked="True"
+                                                  Margin="0,0,0,0"
+                                                  ToolTip.Tip="{loc:GetText Key={x:Static strings:UiCatalogKeys.TooltipAllowInstall}}"
+                                                  Checked="OnConstraintCheckboxChanged"
+                                                  Unchecked="OnConstraintCheckboxChanged" />
+                                        <CheckBox x:Name="AllowNetworkAccessCheckBox"
+                                                  x:FieldModifier="private"
+                                                  Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.OptionAllowInternet}}"
+                                                  IsChecked="True"
+                                                  Margin="0,6,0,0"
+                                                  ToolTip.Tip="{loc:GetText Key={x:Static strings:UiCatalogKeys.TooltipAllowInternet}}"
+                                                  Checked="OnConstraintCheckboxChanged"
+                                                  Unchecked="OnConstraintCheckboxChanged" />
+                                        <CheckBox x:Name="AllowSystemConfigurationChangesCheckBox"
+                                                  x:FieldModifier="private"
+                                                  Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.OptionAllowSystemConfig}}"
+                                                  IsChecked="True"
+                                                  Margin="0,6,0,0"
+                                                  ToolTip.Tip="{loc:GetText Key={x:Static strings:UiCatalogKeys.TooltipAllowSystemConfig}}"
+                                                  Checked="OnConstraintCheckboxChanged"
+                                                  Unchecked="OnConstraintCheckboxChanged" />
+
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionPolicyRiskToleranceOptions}}"
+                                                   Margin="0,16,0,4"
+                                                   FontWeight="SemiBold" />
+                                        <StackPanel Spacing="8">
+                                            <TextBlock x:Name="PolicyRiskToleranceValueTextBlock"
+                                                       x:FieldModifier="private"
+                                                       Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextPolicyAutoApproveDefault}}"
+                                                       FontWeight="SemiBold" />
+                                                <Slider x:Name="PolicyRiskToleranceSlider"
+                                                    x:FieldModifier="private"
+                                                    Minimum="0"
+                                                    Maximum="3"
+                                                    TickFrequency="1"
+                                                    TickPlacement="BottomRight"
+                                                    IsSnapToTickEnabled="True"
+                                                    Margin="0,4,0,0"
+                                                    Value="1"
+                                                    ValueChanged="OnPolicyRiskToleranceSliderValueChanged" />
+                                        </StackPanel>
+
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionCommandRetryAttempts}}"
+                                                   Margin="0,16,0,4"
+                                                   FontWeight="SemiBold" />
+                                        <StackPanel>
+                                                      <TextBlock x:Name="CommandRetryAttemptsValueTextBlock"
+                                                          x:FieldModifier="private"
+                                                          Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextRetriesPlaceholder}}"
+                                                       FontWeight="SemiBold" />
+                                                <Slider x:Name="CommandRetryAttemptsSlider"
+                                                    x:FieldModifier="private"
+                                                    Minimum="0"
+                                                    Maximum="50"
+                                                    TickFrequency="1"
+                                                    IsSnapToTickEnabled="True"
+                                                    Margin="0,4,0,0"
+                                                    Value="25"
+                                                    ValueChanged="OnCommandRetryAttemptsSliderValueChanged" />
+                                        </StackPanel>
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextRetryExplanation}}"
+                                                   Margin="0,4,0,0" />
+
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionRecursionExitBias}}"
+                                                   Margin="0,16,0,4"
+                                                   FontWeight="SemiBold" />
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelBaseRetention}}"
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock x:Name="RecursiveExitBiasValueTextBlock"
+                                                       x:FieldModifier="private"
+                                                       Margin="8,0,0,0"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <Slider x:Name="RecursiveExitBiasSlider"
+                                            x:FieldModifier="private"
+                                                Minimum="0"
+                                                Maximum="100"
+                                                TickFrequency="5"
+                                                IsSnapToTickEnabled="True" />
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                            <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelRetentionIncrement}}"
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock x:Name="RecursiveExitBiasIncrementValueTextBlock"
+                                                       x:FieldModifier="private"
+                                                       Margin="8,0,0,0"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+
+                                        <Slider x:Name="RecursiveExitBiasIncrementSlider"
+                                            x:FieldModifier="private"
+                                                Minimum="0"
+                                                Maximum="100"
+                                                TickFrequency="5"
+                                                IsSnapToTickEnabled="True" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </TabItem>
+                    </TabControl>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Spacing="8">
+                        <Button x:Name="StartAssignmentButton"
+                                x:FieldModifier="private"
+                            Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonStart}}"
+                                Width="150"
+                                Click="OnStartAssignmentClick" />
+                        <Button x:Name="PauseAssignmentButton"
+                                x:FieldModifier="private"
+                            Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonPause}}"
+                                Width="100"
+                                Click="OnPauseAssignmentClick" />
+                        <Button x:Name="CancelAssignmentButton"
+                                x:FieldModifier="private"
+                            Content="{loc:GetText Key={x:Static strings:UiCatalogKeys.ButtonCancel}}"
+                                Width="100"
+                                Click="OnCancelAssignmentClick" />
+                    </StackPanel>
+                </StackPanel>
+                </Border>
+
+        </ScrollViewer>
+
+        <GridSplitter x:Name="RightPaneSplitter"
+                   x:FieldModifier="private"
+                       Grid.Row="1"
+                       Grid.Column="2"
+                       Width="12"
+                       Margin="0,6"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       ResizeBehavior="PreviousAndNext"
+                       Cursor="SizeWestEast"
+                       IsHitTestVisible="True">
+            <GridSplitter.Template>
+                <ControlTemplate>
+                    <Thumb x:Name="PART_Thumb"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           Cursor="{TemplateBinding Cursor}"
+                           Background="Transparent"
+                           BorderBrush="Transparent">
+                        <Thumb.Styles>
+                            <Style Selector="Thumb#PART_Thumb:pointerover Border#GripBackground">
+                                <Setter Property="Opacity" Value="0.9" />
+                            </Style>
+                            <Style Selector="Thumb#PART_Thumb:pressed Border#GripBackground">
+                                <Setter Property="Opacity" Value="0.65" />
+                            </Style>
+                            <Style Selector="Thumb#PART_Thumb:pointerover">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                            </Style>
+                            <Style Selector="Thumb#PART_Thumb:pressed">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                            </Style>
+                        </Thumb.Styles>
+                        <Thumb.Template>
+                            <ControlTemplate>
+                                <Border x:Name="GripBackground"
+                                        Background="#4C1E1E28"
+                                        BorderBrush="#661E1E28"
+                                        BorderThickness="1,0,1,0"
+                                        CornerRadius="4">
+                                    <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Spacing="4">
+                                    <Rectangle Width="3" Height="24" Fill="#CCFFFFFF" RadiusX="1.5" RadiusY="1.5" />
+                                    <Rectangle Width="3" Height="24" Fill="#99FFFFFF" RadiusX="1.5" RadiusY="1.5" />
+                                    <Rectangle Width="3" Height="24" Fill="#66FFFFFF" RadiusX="1.5" RadiusY="1.5" />
+                                    </StackPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </Thumb.Template>
+                    </Thumb>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter>
+
+            <ScrollViewer Grid.Column="3"
+                          Margin="6,0,0,0"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="12">
+
+                                        <Grid x:Name="QuickStartOverlayGrid"
+                                                x:FieldModifier="private"
+                                            IsVisible="False"
+                      HorizontalAlignment="Stretch">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                                    HorizontalScrollBarVisibility="Disabled">
+                                                <Border Padding="18"
+                                                                CornerRadius="10"
+                                                                Background="{DynamicResource ThemeControlLowBrush}"
+                                                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                                                BorderThickness="1.5"
+                                                                HorizontalAlignment="Stretch">
+                                                        <StackPanel Spacing="12">
+                            <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionQuickStartTitle}}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Left" />
+                            <StackPanel Margin="0,0,0,6" Spacing="10">
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0" Spacing="8">
+                                    <TextBlock x:Name="QuickStartApiStatusGlyph"
+                                               x:FieldModifier="private"
+                                               Width="24"
+                                               FontSize="16"
+                                               Text="&#x25CB;"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Left" />
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartConnectOpenAi}}"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="QuickStartApiStatusTextBlock"
+                                                   x:FieldModifier="private"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartConnectDetail}}"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="8">
+                                    <TextBlock x:Name="QuickStartModelStatusGlyph"
+                                               x:FieldModifier="private"
+                                               Text="&#x25CB;"
+                                               Width="24"
+                                               FontSize="16"
+                                               VerticalAlignment="Center" />
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartChooseModel}}"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="QuickStartModelStatusTextBlock"
+                                                   x:FieldModifier="private"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartChooseModelDetail}}"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="8">
+                                    <TextBlock x:Name="QuickStartWorkspaceStatusGlyph"
+                                               x:FieldModifier="private"
+                                               Width="24"
+                                               FontSize="16"
+                                               Text="&#x25CB;"
+                                               VerticalAlignment="Center" />
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartPickWorkspace}}"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="QuickStartWorkspaceStatusTextBlock"
+                                                   x:FieldModifier="private"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartPickWorkspaceDetail}}"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="8">
+                                    <TextBlock x:Name="QuickStartAssignmentStatusGlyph"
+                                               x:FieldModifier="private"
+                                               Width="24"
+                                               FontSize="16"
+                                               Text="&#x25CB;"
+                                               VerticalAlignment="Center" />
+                                    <StackPanel Margin="8,0,0,0">
+                                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartDescribeAssignment}}"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock x:Name="QuickStartAssignmentStatusTextBlock"
+                                                   x:FieldModifier="private"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.QuickStartDescribeAssignmentDetail}}"
+                                                   FontSize="12" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        </Border>
+                    </ScrollViewer>
+                </Grid>
+
+                <Border
+                        BorderBrush="{DynamicResource ThemeBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12"
+                        Margin="0,0,0,12"
+                        HorizontalAlignment="Stretch"
+                        Background="{DynamicResource ThemeControlLowBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionUsageTelemetry}}"
+                                   FontWeight="SemiBold"
+                                   FontSize="18" />
+
+                        <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                            <Border Width="240"
+                                    MinWidth="200"
+                                    Background="{DynamicResource ThemeControlLowBrush}"
+                                    BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="12"
+                                    Margin="0,0,12,12">
+                                <StackPanel>
+                                    <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelTotalRequests}}"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock x:Name="UsageTotalRequestsValueTextBlock"
+                                               x:FieldModifier="private"
+                                               Text="0"
+                                               FontSize="24"
+                                               FontWeight="Bold"
+                                               Margin="0,4,0,0" />
+                                    <TextBlock x:Name="UsageLastUpdateTextBlock"
+                                               x:FieldModifier="private"
+                                               Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextUsageUpdatedPlaceholder}}"
+                                               FontSize="12"
+                                               Margin="0,6,0,0" />
+                                </StackPanel>
+                            </Border>
+
+                                <Border Width="240"
+                                    MinWidth="200"
+                                    Background="{DynamicResource ThemeControlLowBrush}"
+                                    BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="12"
+                                    Margin="0,0,12,12">
+                                <StackPanel>
+                                    <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.LabelTokensConsumed}}"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock x:Name="UsageTokensValueTextBlock"
+                                               x:FieldModifier="private"
+                                               Text="0"
+                                               FontSize="24"
+                                               FontWeight="Bold"
+                                               Margin="0,4,0,0" />
+                                    <TextBlock x:Name="UsageTokensDetailTextBlock"
+                                               x:FieldModifier="private"
+                                               Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.TextTokensDetailPlaceholder}}"
+                                               FontSize="12"
+                                               Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+
+                    </Grid>
+                </Border>
+
+                                <Border
+                        BorderBrush="{DynamicResource ThemeBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12"
+                        Margin="0,0,0,12"
+                        HorizontalAlignment="Stretch"
+                        Background="{DynamicResource ThemeControlLowBrush}">
+                                        <Grid RowDefinitions="Auto,*"
+                          Grid.IsSharedSizeScope="True">
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionSuccessHeuristics}}"
+                                   FontWeight="SemiBold"
+                                                                     FontSize="18" />
+                                                <Grid Grid.Row="1"
+                              RowDefinitions="Auto,*"
+                              Margin="0,12,0,0"
+                              Grid.IsSharedSizeScope="True">
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="0,12,0,0"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      Grid.IsSharedSizeScope="True">
+                            <StackPanel>
+                                <Border CornerRadius="4"
+                                        Padding="8,4">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140" SharedSizeGroup="HeuristicRequirementColumn" />
+                                            <ColumnDefinition Width="2*" SharedSizeGroup="HeuristicDescriptionColumn" />
+                                            <ColumnDefinition Width="1.5*" SharedSizeGroup="HeuristicEvidenceColumn" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderRequirement}}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderDescription}}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold" />
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderEvidence}}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold" />
+                                    </Grid>
+                                </Border>
+                                <ListBox Margin="0,8,0,0"
+                                         x:Name="SuccessHeuristicsListView"
+                                         x:FieldModifier="private"
+                                         BorderThickness="0"
+                                         MaxHeight="260"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SuccessHeuristicItem">
+                                        <Border Padding="8"
+                                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                                BorderThickness="0,0,0,1">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140" SharedSizeGroup="HeuristicRequirementColumn" />
+                                                    <ColumnDefinition Width="2*" SharedSizeGroup="HeuristicDescriptionColumn" />
+                                                    <ColumnDefinition Width="1.5*" SharedSizeGroup="HeuristicEvidenceColumn" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Grid.Column="0"
+                                                    Padding="6,2"
+                                                    CornerRadius="4"
+                                                    HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding Mandatory, Converter={StaticResource BoolToRequirementTextConverter}}"
+                                                               FontWeight="SemiBold" />
+                                                </Border>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Description}"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding Evidence, TargetNullValue={loc:GetText Key={x:Static strings:UiCatalogKeys.TextManualInspection}}}"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </Border>
+
+                                <Border
+                        BorderBrush="{DynamicResource ThemeBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12"
+                        Margin="0,0,0,12"
+                        HorizontalAlignment="Stretch"
+                        Background="{DynamicResource ThemeControlLowBrush}">
+                                        <Grid RowDefinitions="Auto,*"
+                          Grid.IsSharedSizeScope="True">
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionSemanticBlackboard}}"
+                                   FontWeight="SemiBold"
+                                                                     FontSize="18" />
+                                                <ScrollViewer Grid.Row="1"
+                                                              Margin="0,12,0,0"
+                                                              HorizontalScrollBarVisibility="Auto"
+                                                              VerticalScrollBarVisibility="Disabled"
+                                                              Grid.IsSharedSizeScope="True">
+                                                    <StackPanel>
+                                                        <Border CornerRadius="4"
+                                                                Padding="8,4">
+                                                            <Grid ColumnSpacing="12">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="1.8*" SharedSizeGroup="FactSummaryColumn" />
+                                                                    <ColumnDefinition Width="2.2*" SharedSizeGroup="FactDetailColumn" />
+                                                                    <ColumnDefinition Width="1.2*" SharedSizeGroup="FactFileColumn" />
+                                                                    <ColumnDefinition Width="1*" SharedSizeGroup="FactSourceColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="FactRecordedColumn" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderSummary}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="1" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderDetail}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="2" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderFile}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="3" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderSource}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="4" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderRecorded}}" FontSize="11" FontWeight="SemiBold" />
+                                                            </Grid>
+                                                        </Border>
+                                                        <ListBox Margin="0,8,0,0"
+                                                                 x:Name="AceFactsListView"
+                                                                 x:FieldModifier="private"
+                                                                 BorderThickness="0"
+                                                                 MaxHeight="260"
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SemanticFactRecord">
+                                        <Border Padding="8"
+                                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                                BorderThickness="0,0,0,1">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.8*" SharedSizeGroup="FactSummaryColumn" />
+                                                    <ColumnDefinition Width="2.2*" SharedSizeGroup="FactDetailColumn" />
+                                                    <ColumnDefinition Width="1.2*" SharedSizeGroup="FactFileColumn" />
+                                                    <ColumnDefinition Width="1*" SharedSizeGroup="FactSourceColumn" />
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="FactRecordedColumn" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Summary}"
+                                                           FontWeight="SemiBold"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Detail}"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding File}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="3"
+                                                           Text="{Binding Source}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="4"
+                                                           Text="{Binding RecordedAtDisplay}" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                                <Border
+                        BorderBrush="{DynamicResource ThemeBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="12"
+                        Background="{DynamicResource ThemeControlLowBrush}">
+                                        <Grid RowDefinitions="Auto,*"
+                          Grid.IsSharedSizeScope="True">
+                        <TextBlock Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.SectionPolicyInterceptor}}"
+                                   FontWeight="SemiBold"
+                                                                     FontSize="18" />
+                                                <ScrollViewer Grid.Row="1"
+                                                              Margin="0,12,0,0"
+                                                              HorizontalScrollBarVisibility="Auto"
+                                                              VerticalScrollBarVisibility="Disabled"
+                                                              Grid.IsSharedSizeScope="True">
+                                                    <StackPanel>
+                                                        <Border CornerRadius="4"
+                                                                Padding="8,4">
+                                                            <Grid ColumnSpacing="12">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PolicyTimeColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PolicyRiskColumn" />
+                                                                    <ColumnDefinition Width="120" SharedSizeGroup="PolicyDecisionColumn" />
+                                                                    <ColumnDefinition Width="2*" SharedSizeGroup="PolicyCommandColumn" />
+                                                                    <ColumnDefinition Width="2*" SharedSizeGroup="PolicyReasonColumn" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderTime}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="1" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderRisk}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="2" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderDecision}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="3" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderCommand}}" FontSize="11" FontWeight="SemiBold" />
+                                                                <TextBlock Grid.Column="4" Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.HeaderReason}}" FontSize="11" FontWeight="SemiBold" />
+                                                            </Grid>
+                                                        </Border>
+                                                        <ListBox Margin="0,8,0,0"
+                                                                 x:Name="PolicyInterceptorListView"
+                                                                 x:FieldModifier="private"
+                                                                 BorderThickness="0"
+                                                                 MaxHeight="260"
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:PolicyDecisionItem">
+                                        <Border Padding="8"
+                                                BorderBrush="{DynamicResource ThemeBorderBrush}"
+                                                BorderThickness="0,0,0,1">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PolicyTimeColumn" />
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PolicyRiskColumn" />
+                                                    <ColumnDefinition Width="120" SharedSizeGroup="PolicyDecisionColumn" />
+                                                    <ColumnDefinition Width="2*" SharedSizeGroup="PolicyCommandColumn" />
+                                                    <ColumnDefinition Width="2*" SharedSizeGroup="PolicyReasonColumn" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding TimestampDisplay}" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Risk}" />
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding DecisionDisplay}"
+                                                           FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="3"
+                                                           Text="{Binding Command}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="4"
+                                                           Text="{Binding Reason}"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+                </StackPanel>
+                </ScrollViewer>
+
+                        <Grid x:Name="PlannerOverlayGrid"
+                            Grid.ColumnSpan="4"
+                                    IsHitTestVisible="False"
+                                    IsVisible="False">
+                <Border Width="380"
+                    Padding="16"
+                    CornerRadius="8"
+                    Background="{DynamicResource ThemeControlLowBrush}"
+                    BorderBrush="{DynamicResource ThemeBorderBrush}"
+                    BorderThickness="1"
+                    Opacity="0.95"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <ContentControl Template="{StaticResource SpinnerTemplate}"
+                                        Width="32"
+                                        Height="32"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                        <TextBlock x:Name="PlannerOverlayTitleTextBlock"
+                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.StatusPlannerCommunicating}}"
+                                   Margin="0,12,0,0"
+                                   HorizontalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                        <TextBlock x:Name="PlannerOverlayStatusTextBlock"
+                                   Text="{loc:GetText Key={x:Static strings:UiCatalogKeys.StatusPlannerPreparing}}"
+                                   Margin="0,8,0,0"
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
