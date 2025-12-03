@@ -3,7 +3,7 @@
 
 # Showcase
 <img src="Readme/Mirahelp_Supervisor_Dark.png" width="360"> <img src="Readme/Mirahelp_Supervisor_Light.png" width="360">  
-<img src="Readme/Mirahelp_Result_Dark.png" width="360"> <img src="Readme/Mirahelp_Result_Light.png" width="360">
+<img src="Readme/Mirahelp_Result_Dark.png" width="360">
 
 # Description
 A desktop research environment built with Avalonia and .NET 10. It attempts to offers a fire and forget self-healing environment for research purposes.
